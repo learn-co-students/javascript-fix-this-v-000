@@ -1,3 +1,5 @@
+"use strict"
+
 describe('index', function() {
   describe('cook functions', function() {
     before(function() {
