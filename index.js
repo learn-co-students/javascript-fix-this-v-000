@@ -72,11 +72,7 @@ function makeDessert() {
   } else {
     makePie.call(this.parentNode)
   }
-<<<<<<< HEAD
 }
-=======
-  }
->>>>>>> df813d397d1f37ed55cd479f465fa0f7a4aa88dc
 
 function serve(message, customer) {
   //you shouldn't need to alter this function
