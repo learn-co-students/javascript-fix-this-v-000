@@ -71,12 +71,10 @@ function makeDessert() {
 }
 
 function serve(message, customer) {
-  //you shouldn't need to alter this function
   return(customer + ", your " + this.name + " is ready to eat! " + message)
 }
 
 document.addEventListener("DOMContentLoaded", function(event) {
-  //you shouldn't need to alter this function
   var cookLinks = document.getElementsByClassName("js-make")
   for(var i=0; i<cookLinks.length; i++) {
     cookLinks[i].addEventListener("click", makeDessert)
