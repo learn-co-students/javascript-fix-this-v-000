@@ -24,17 +24,16 @@ var pie = {
   customer: "Tammy"
 }
 
-pie.decorate = cake.decorate.bind(pie);
 
 function makeCake() {
-  // var updateCakeStatus = updateStatus.bind(document.getElementById("cake"));
   var updateCakeStatus = updateStatus.bind(this);
   mix.call(cake, updateCakeStatus);
 }
 
 function makePie() {
-  // var updatePieStatus = updateStatus.bind(document.getElementById("pie"));
   var updatePieStatus = updateStatus.bind(this);
+
+  pie.decorate = cake.decorate.bind(pie);
   mix.call(pie, updatePieStatus);
 }
 
@@ -69,9 +68,10 @@ function cool(updateFunction) {
 function makeDessert() {
   //add code here to decide which make... function to call
   //based on which link was clicked
-  if (this.innerText === "Make Cake") {
+  // if (this.parentNode.id === "cake") {
+  if (this.innerHTML === "Make Cake") {
     makeCake.call(document.getElementById("cake"));
-  } else if (this.innerText === "Make Pie") {
+  } else if (this.innerHTML === "Make Pie") {
     makePie.call(document.getElementById("pie"));
   }
 }
