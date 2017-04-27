@@ -10,7 +10,7 @@ var cake = {
     updateFunction(status)
     setTimeout(function() {
       updateFunction(serve.apply(this, "Happy Eating!", this.customer))
-    }, 2000)
+    }.bind(this), 2000)
   }
 }
 
@@ -41,14 +41,14 @@ function bake(updateFunction) {
   var status = "Baking at " + this.bakeTemp + " for " + this.bakeTime
   setTimeout(function() {
     cool(updateFunction)
-  }, 2000)
+  }.bind(this), 2000)
 }
 
 function mix(updateFunction) {
   var status = "Mixing " + this.ingredients.join(", ")
   setTimeout(function() {
     bake(updateFunction)
-  }, 2000)
+  }.bind(this), 2000)
   updateFunction(status)
 }
 
@@ -56,7 +56,7 @@ function cool(updateFunction) {
   var status = "It has to cool! Hands off!"
   setTimeout(function() {
     this.decorate(updateFunction)
-  }, 2000)
+  }.bind(this), 2000)
 }
 
 function makeDessert() {
