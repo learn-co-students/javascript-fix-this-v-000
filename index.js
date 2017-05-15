@@ -25,15 +25,15 @@ var pie = {
 
 
 function makeCake() {
-  var updateCakeStatus = updateStatus.bind(document.getElementById('cake'));
+  var updateCakeStatus = updateStatus.bind(this);
   mix.call(cake, updateCakeStatus )
 }
 
 
 function makePie() {
-  var updatePieStatus = updateStatus.bind(document.getElementById('pie'));
+  pie.decorate = cake.decorate.bind(pie)
+  var updatePieStatus = updateStatus.bind(this);
   mix.call(pie, updatePieStatus)
-  pie.decorate = cake.decorate.bind(pie, updatePieStatus)
 
 }
 
@@ -70,10 +70,10 @@ function cool(updateFunction) {
 
 function makeDessert() {
  if (this.parentNode.id === 'pie') {
-   makePie()
+   makePie.call(this.parentNode)
  }
  else {
-   makeCake()
+   makeCake.call(this.parentNode)
  }
 }
 
