@@ -25,15 +25,16 @@ var pie = {
 
 
 function makeCake() {
-  var updateCakeStatus = updateStatus.bind();
-  mix(updateCakeStatus)
+  var updateCakeStatus = updateStatus.bind(document.getElementById('cake'));
+  mix.call(cake, updateCakeStatus )
 }
 
 
 function makePie() {
-  pie.decorate = cake.decorate.bind(pie)
   var updatePieStatus = updateStatus.bind(document.getElementById('pie'));
-  mix(updatePieStatus)
+  mix.call(pie, updatePieStatus)
+  pie.decorate = cake.decorate.bind(pie, updatePieStatus)
+
 }
 
 
@@ -44,29 +45,36 @@ function updateStatus(statusText) {
 
 function bake(updateFunction) {
   var status = "Baking at " + this.bakeTemp + " for " + this.bakeTime
+  updateFunction(status)
   setTimeout(() => {
-    cool(updateFunction.call(this))
+    cool.call(this, updateFunction)
   }, 2000)
 }
 
 function mix(updateFunction) {
   var status = "Mixing " + this.ingredients.join(", ")
-  setTimeout(() => {
-    bake(updateFunction)
-  }, 2000)
   updateFunction(status)
+
+  setTimeout(() => {
+    bake.call(this, updateFunction)
+  }, 2000)
 }
 
 function cool(updateFunction) {
   var status = "It has to cool! Hands off!"
-  setTimeout(function() {
-    this.decorate(updateFunction)
+  updateFunction(status)
+  setTimeout(() => {
+    this.decorate.call(this, updateFunction)
   }, 2000)
 }
 
 function makeDessert() {
-  //add code here to decide which make... function to call
-  //based on which link was clicked
+ if (this.parentNode.id === 'pie') {
+   makePie()
+ }
+ else {
+   makeCake()
+ }
 }
 
 function serve(message, customer) {
