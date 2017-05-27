@@ -8,9 +8,9 @@ var cake = {
   decorate: function(updateFunction) {
     var status = "Decorating with " + this.topping + ". Ready to eat soon!"
     updateFunction(status)
-    setTimeout(function() {
+    setTimeout(() =>
       updateFunction(serve.apply(this, ["Happy Eating!", this.customer]))
-    }, 2000)
+    , 2000)
   }
 }
 
@@ -23,9 +23,6 @@ var pie = {
   customer: "Tammy"
 }
 
-function updateStatus(statusText) {
-  this.getElementsByClassName("status")[0].innerText = statusText
-}
 
 function makeCake() {
   var updateCakeStatus = updateStatus.bind(this)
@@ -34,41 +31,52 @@ function makeCake() {
 
 function makePie() {
   var updatePieStatus = updateStatus.bind(this)
-  mix.call(pie, updatePieStatus)
   pie.decorate = cake.decorate.bind(pie)
+  mix.call(pie, updatePieStatus)
 }
 
 function mix(updateFunction) {
   var status = "Mixing " + this.ingredients.join(", ")
-  setTimeout(function() {
-    bake(updateFunction)
+  setTimeout(() =>
+    {bake.call(this,updateFunction);
   }, 2000)
   updateFunction(status)
 }
 
 function bake(updateFunction) {
   var status = "Baking at " + this.bakeTemp + " for " + this.bakeTime
-  setTimeout(function() {
-    cool(updateFunction)
+  setTimeout(() => {
+    cool.call(this,updateFunction);
   }, 2000)
+  updateFunction(status)
 }
 
 function cool(updateFunction) {
   var status = "It has to cool! Hands off!"
-  var updateStatus = updateStatus.bind(this)
-  setTimeout(function() {
-    this.decorate(updateFunction)
+  setTimeout(() => {
+    this.decorate(updateFunction);
   }, 2000)
+  updateFunction(status)
 }
 
 function makeDessert() {
   //add code here to decide which make... function to call
   //based on which link was clicked
+  if (this.parentNode.id === 'pie') {
+    makePie.call(this.parentNode)
+  }
+  if (this.parentNode.id === 'cake') {
+    makeCake.call(this.parentNode)
+  }
 }
 
 function serve(message, customer) {
   //you shouldn't need to alter this function
   return(customer + ", your " + this.name + " is ready to eat! " + message)
+}
+
+function updateStatus(statusText) {
+  this.getElementsByClassName("status")[0].innerText = statusText
 }
 
 document.addEventListener("DOMContentLoaded", function(event) {
