@@ -6,6 +6,7 @@ var cake = {
   bakeTime: "45 minutes",
   customer: "Tommy",
   decorate: function(updateFunction) {
+    console.log("In decorate")
     var status = "Decorating with " + this.topping + ". Ready to eat soon!"
     updateFunction(status)
     setTimeout(function() {
@@ -23,45 +24,57 @@ var pie = {
   customer: "Tammy"
 }
 
-function makeCake() {
-  var updateCakeStatus;
-  mix(updateCakeStatus)
+function makeDessert() {
+  if (this.parentNode.id == "cake"){
+    makeCake.call(this.parentNode);
+  } else {
+    makePie.call(this.parentNode);
+  }
 }
 
-function makePie() {
-  var updatePieStatus;
-  mix(updatePieStatus)
+function makeCake() {
+  console.log("In makeCake")
+  var updateCakeStatus = updateStatus.bind(this);
+  mix.call(cake, updateCakeStatus)
 }
 
 function updateStatus(statusText) {
   this.getElementsByClassName("status")[0].innerText = statusText
 }
 
-function bake(updateFunction) {
-  var status = "Baking at " + this.bakeTemp + " for " + this.bakeTime
-  setTimeout(function() {
-    cool(updateFunction)
-  }, 2000)
+function makePie() {
+  let updatePieStatusFn = updateStatus.bind(this);
+  mix(updatePieStatusFn)
 }
 
 function mix(updateFunction) {
   var status = "Mixing " + this.ingredients.join(", ")
-  setTimeout(function() {
-    bake(updateFunction)
+  setTimeout(() => bake.call(this, updateFunction), 2000)
+  updateFunction(status)
+  // This is one way to do it. Took a screenshot of the other way
+  // setTimeout(callback.bind(this), 2000)
+  // The 'this' of native functions is different
+}
+
+function bake(updateFunction) {
+  console.log("In bake")
+  console.log("Bake's this: ", this)
+  var status = "Baking at o" + this.bakeTemp + " for " + this.bakeTime
+  console.log(status)
+  setTimeout(() => {
+    cool.call(this, updateFunction)
   }, 2000)
   updateFunction(status)
 }
 
 function cool(updateFunction) {
+  console.log("In cool")
+  console.log("Cool's this: ", this)
   var status = "It has to cool! Hands off!"
   setTimeout(function() {
+    console.log("Cool setTimeout Func's 'this': ", this)
     this.decorate(updateFunction)
   }, 2000)
-}
-
-function makeDessert() {
-  //add code here to decide which make... function to call
-  //based on which link was clicked
 }
 
 function serve(message, customer) {
