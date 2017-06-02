@@ -56,10 +56,10 @@ function cool(updateFunction) {
 }
 
 function makeDessert() {
-  if(this.innerText == "Make Cake") {
-    makeCake.call(document.getElementById("cake"));
+  if(this.parentNode.id == "cake") {
+    makeCake.call(this.parentNode);
   } else {
-    makePie.call(document.getElementById("pie"));
+    makePie.call(this.parentNode);
   }
 }
 
