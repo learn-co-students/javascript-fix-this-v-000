@@ -8,8 +8,9 @@ var cake = {
   decorate: function(updateFunction) {
     var status = "Decorating with " + this.topping + ". Ready to eat soon!"
     updateFunction(status)
+    var dessert = this;
     setTimeout(function() {
-      updateFunction(serve.apply(this, "Happy Eating!", this.customer))
+      updateFunction(serve.apply(dessert, ["Happy Eating!", dessert.customer]))
     }, 2000)
   }
 }
@@ -25,12 +26,16 @@ var pie = {
 
 function makeCake() {
   var updateCakeStatus;
-  mix(updateCakeStatus)
+  updateCakeStatus = updateStatus.bind(document.getElementById('cake'));
+  mix.call(cake,updateCakeStatus)
 }
 
 function makePie() {
   var updatePieStatus;
-  mix(updatePieStatus)
+  updatePieStatus = updateStatus.bind(document.getElementById("pie"));
+  pie.decorate = cake.decorate.bind(pie);
+
+  mix.call(pie,updatePieStatus)
 }
 
 function updateStatus(statusText) {
@@ -39,29 +44,41 @@ function updateStatus(statusText) {
 
 function bake(updateFunction) {
   var status = "Baking at " + this.bakeTemp + " for " + this.bakeTime
+  var dessert = this;
   setTimeout(function() {
-    cool(updateFunction)
+    cool.call(dessert, updateFunction)
   }, 2000)
+  updateFunction(status)
 }
 
 function mix(updateFunction) {
   var status = "Mixing " + this.ingredients.join(", ")
+  var dessert = this;
   setTimeout(function() {
-    bake(updateFunction)
+    bake.call(dessert, updateFunction);
   }, 2000)
   updateFunction(status)
 }
 
 function cool(updateFunction) {
   var status = "It has to cool! Hands off!"
+  var dessert = this;
   setTimeout(function() {
-    this.decorate(updateFunction)
+    dessert.decorate(updateFunction)
   }, 2000)
+  updateFunction(status)
 }
 
 function makeDessert() {
   //add code here to decide which make... function to call
   //based on which link was clicked
+  if(this.innerHTML === "Make Cake"){
+    makeCake.call(document.getElementById("cake"));
+  }
+  else if(this.innerHTML === "Make Pie"){
+    makePie.call(document.getElementById("pie"));
+  }
+
 }
 
 function serve(message, customer) {
