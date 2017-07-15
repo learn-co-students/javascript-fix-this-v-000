@@ -1,7 +1,7 @@
 describe('index', function() {
   describe('cook functions', function() {
     before(function() {
-      let useFakeTimers = null
+      var useFakeTimers = null
 
       if (typeof sinon === 'undefined') {
         useFakeTimers = require('sinon').useFakeTimers;
@@ -16,7 +16,7 @@ describe('index', function() {
       this.clock.restore()
     })
 
-    let update
+    var update
     before(function() {
       update = updateStatus.bind(document.getElementById("pie"))
     })
