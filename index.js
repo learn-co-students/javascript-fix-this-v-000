@@ -30,6 +30,9 @@ function makeCake() {
 
 function makePie() {
   var updatePieStatus;
+  this
+  debugger;
+
   mix(updatePieStatus)
 }
 
@@ -62,6 +65,9 @@ function cool(updateFunction) {
 function makeDessert() {
   //add code here to decide which make... function to call
   //based on which link was clicked
+  this.innerText === "Make Pie" ? makePie() : makeCake()
+  debugger;
+
 }
 
 function serve(message, customer) {
