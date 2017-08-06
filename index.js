@@ -1,3 +1,4 @@
+
 var cake = {
   name: "German Chocolate Cake",
   ingredients: ["eggs", "flour", "oil", "chocolate", "sugar", "butter"],
@@ -8,8 +9,8 @@ var cake = {
   decorate: function(updateFunction) {
     var status = "Decorating with " + this.topping + ". Ready to eat soon!"
     updateFunction(status)
-    setTimeout(function() {
-      updateFunction(serve.apply(this, "Happy Eating!", this.customer))
+    setTimeout( () => {
+      updateFunction(serve.apply(this, ["Happy Eating!", this.customer]))
     }, 2000)
   }
 }
@@ -24,44 +25,61 @@ var pie = {
 }
 
 function makeCake() {
-  var updateCakeStatus;
-  mix(updateCakeStatus)
+  var updateCakeStatus = updateStatus.bind(this)
+  updateCakeStatus("preparation")
+  mix.call(cake, updateCakeStatus)
 }
 
+ //Inside the makePie function, "borrow" the decorate function from cake and make it available to pie through pie.decorate() so it can be executed later.
+ //Create a version of updateStatus inside of makePie and makeCake with the correct this context, representing either the pie or cake <div> respectively,
+ //that you can pass around to the other functions so that each one can execute it and ensure that the right DOM elements are getting updated at each step. You shouldn't need to change updateStatus at all
 function makePie() {
-  var updatePieStatus;
-  mix(updatePieStatus)
+  var updatePieStatus = updateStatus.bind(this)
+  updatePieStatus("preparation")
+  pie.decorate = cake.decorate.bind(pie)
+  mix.call(pie, updatePieStatus)
 }
 
 function updateStatus(statusText) {
   this.getElementsByClassName("status")[0].innerText = statusText
 }
 
+//For the bake, cool, and mix functions, make sure that the function for the next step (called inside setTimeout) is called with the correct context,
+//and that the proper updateFunction is being called to update the status. You'll need to use call inside these functions to get the tests to pass
 function bake(updateFunction) {
   var status = "Baking at " + this.bakeTemp + " for " + this.bakeTime
-  setTimeout(function() {
-    cool(updateFunction)
+  setTimeout(() => {
+    cool.call(this, updateFunction)
   }, 2000)
+  updateFunction(status)
 }
 
 function mix(updateFunction) {
   var status = "Mixing " + this.ingredients.join(", ")
-  setTimeout(function() {
-    bake(updateFunction)
+  setTimeout(() => {
+    bake.call(this, updateFunction)
   }, 2000)
   updateFunction(status)
 }
 
 function cool(updateFunction) {
   var status = "It has to cool! Hands off!"
-  setTimeout(function() {
+  setTimeout(() => {
     this.decorate(updateFunction)
   }, 2000)
+  updateFunction(status)
 }
 
+//Write your makeDessert function that will decide based on which link was clicked whether to makePie or makeCake.
+//Hint: You shouldn't need to alter the code in the document.addEventListener block, but remember that events also set this when they are triggered from the DOM.
 function makeDessert() {
   //add code here to decide which make... function to call
   //based on which link was clicked
+  if (this.parentNode.id === "cake") {
+    makeCake.call(this.parentNode)
+  } else {
+    makePie.call(this.parentNode)
+  }
 }
 
 function serve(message, customer) {
