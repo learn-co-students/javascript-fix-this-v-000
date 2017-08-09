@@ -14,6 +14,8 @@ var cake = {
   }
 }
 
+console.log('hello')
+
 var pie = {
   name: "Apple Pie",
   ingredients: ["apples", "flour", "eggs", "butter", "sugar"],
