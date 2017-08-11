@@ -1,3 +1,4 @@
+'use strict'; 
 describe('index', function() {
   describe('cake', function() {
     it('has a decorate function', function() {
