@@ -42,28 +42,44 @@ function updateStatus(statusText) {
 
 function bake(updateFunction) {
   var status = "Baking at " + this.bakeTemp + " for " + this.bakeTime
-  setTimeout(function() {
-    cool(updateFunction)
+  updateFunction(status)
+  setTimeout(() => {
+    cool.call(this, updateFunction)
   }, 2000)
 }
 
 function mix(updateFunction) {
   var status = "Mixing " + this.ingredients.join(", ")
-  setTimeout(function() {
-    bake(updateFunction)
-  }, 2000)
   updateFunction(status)
+  setTimeout(() => {
+    bake.call(this, updateFunction)
+  }, 2000)
 }
 
 function cool(updateFunction) {
   var status = "It has to cool! Hands off!"
-  setTimeout(function() {
+  updateFunction(status)
+  setTimeout(() => {
     this.decorate(updateFunction)
   }, 2000)
 }
 
 function makeDessert() {
-  console.log(this.innerText);
+  //debugger;
+  if(this.parentNode.id == "cake"){
+    makeCake.call(this.parentNode)
+  } else {
+    makePie.call(this.parentNode)
+  }
+  // console.log(this.innerText);
+  // var dessert = this.innerText;
+  // if (dessert === "Make Pie") {
+  //   var pieNode = document.getElementById("pie")
+  //   makePie.call(pieNode);
+  // } else {
+  //   var pieNode = document.getElementById("cake")
+  //   makeCake.call(pieNode);
+  // }
   //add code here to decide which make... function to call
   //based on which link was clicked
 }
