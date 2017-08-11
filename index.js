@@ -24,13 +24,14 @@ var pie = {
 }
 
 function makeCake() {
-  var updateCakeStatus;
-  mix(updateCakeStatus)
+  var updateCakeStatus = updateStatus.bind(this);
+  updateCakeStatus("Prep")
+  mix.call(cake, updateCakeStatus)
 }
 
 function makePie() {
   var updatePieStatus = updateStatus.bind(this);
-  updatePieStatus("Testing")
+  updatePieStatus("Prep")
   pie.decorate = cake.decorate.bind(pie);
   mix.call(pie, updatePieStatus);
 }
@@ -62,6 +63,7 @@ function cool(updateFunction) {
 }
 
 function makeDessert() {
+  console.log(this.innerText);
   //add code here to decide which make... function to call
   //based on which link was clicked
 }
