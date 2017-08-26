@@ -65,11 +65,11 @@ function cool(updateFunction) {
 function makeDessert() {
   //add code here to decide which make... function to call
   //based on which link was clicked
-  switch(this.innerHTML) {
-    case "Make Cake":
+  switch(this.parentNode) {
+    case "cake":
       makeCake.call(this.parentNode);
       break;
-    case "Make Pie":
+    case "pie":
       makePie.call(this.parentNode);
       break;
   }
