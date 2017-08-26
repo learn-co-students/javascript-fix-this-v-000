@@ -9,7 +9,7 @@ var cake = {
     var status = "Decorating with " + this.topping + ". Ready to eat soon!"
     updateFunction(status)
     setTimeout(() => {
-      updateFunction(serve.call(this, "Happy Eating!", this.customer))
+      updateFunction(serve.apply(this, ["Happy Eating!", this.customer]))
     }, 2000)
   }
 }
@@ -41,7 +41,7 @@ function updateStatus(statusText) {
 function bake(updateFunction) {
   var status = "Baking at " + this.bakeTemp + " for " + this.bakeTime
   setTimeout(() => {
-    cool(updateFunction)
+    cool.call(this, updateFunction)
   }, 2000)
   updateFunction(status)
 }
@@ -49,7 +49,7 @@ function bake(updateFunction) {
 function mix(updateFunction) {
   var status = "Mixing " + this.ingredients.join(", ")
   setTimeout(() => {
-    bake(updateFunction)
+    bake.call(this, updateFunction)
   }, 2000)
   updateFunction(status)
 }
@@ -65,7 +65,7 @@ function cool(updateFunction) {
 function makeDessert() {
   //add code here to decide which make... function to call
   //based on which link was clicked
-  switch(this.parentNode) {
+  switch(this.parentNode.id) {
     case "cake":
       makeCake.call(this.parentNode);
       break;
