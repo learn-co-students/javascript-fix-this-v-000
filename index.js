@@ -5,13 +5,28 @@ var cake = {
   bakeTemp: "425 degrees",
   bakeTime: "45 minutes",
   customer: "Tommy",
-  decorate: function(updateFunction) {
+  decorate: function() {
     var status = "Decorating with " + this.topping + ". Ready to eat soon!"
-    updateFunction(status)
-    setTimeout(function() {
-      updateFunction(serve.apply(this, "Happy Eating!", this.customer))
-    }, 2000)
+    // var customer_serve = serve.bind(this)
+    // 
+    // setTimeout( () => {
+    //   console.log(`${status}`);
+    //     setTimeout( () => {
+    //       // deeper code
+    //       console.log('I happen later');
+    //     }, 2000);
+    // }, 4000);
+
+    //
+    // setTimeout(function() {
+    //   serve.apply(this, "Happy Eating!", this.customer))
+    // }, 2000)
   }
+}
+
+function serve(message, customer) {
+  //you shouldn't need to alter this function
+  return(customer + ", your " + this.name + " is ready to eat! " + message)
 }
 
 var pie = {
