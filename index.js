@@ -6,12 +6,11 @@ var cake = {
   bakeTime: "45 minutes",
   customer: "Tommy",
   decorate: function(updateFunction) {
-    var status = "Decorating with " + this.topping + ". Ready to eat soon!"
-    updateFunction(status)
-    setTimeout(function() {
-      updateFunction(serve.apply(this, "Happy Eating!", this.customer))
-    }, 2000)
-  }
+    var status = "Decorating with " + this.topping + ". Ready to eat soon!";
+    this.status = status;
+    setTimeout(serve.apply(this, ["Happy Eating!", this.customer]), 2000)
+    },
+updateStatus: updateStatus.bind(document.getElementById("cake"))
 }
 
 var pie = {
@@ -20,17 +19,21 @@ var pie = {
   topping: "streusel",
   bakeTemp: "350 degrees",
   bakeTime: "75 minutes",
-  customer: "Tammy"
+  customer: "Tammy",
+  decorate: cake.decorate.bind(pie),
+  updateStatus: updateStatus.bind(document.getElementById("pie"))
+
 }
 
 function makeCake() {
-  var updateCakeStatus;
-  mix(updateCakeStatus)
+  debugger;
+  var updateCakeStatus = cake.updateStatus;
+  mix.call(updateCakeStatus)
 }
 
 function makePie() {
-  var updatePieStatus;
-  mix(updatePieStatus)
+  var updatePieStatus = pie.updateStatus;
+  mix.call(updatePieStatus)
 }
 
 function updateStatus(statusText) {
@@ -45,11 +48,12 @@ function bake(updateFunction) {
 }
 
 function mix(updateFunction) {
+  debugger;
   var status = "Mixing " + this.ingredients.join(", ")
   setTimeout(function() {
     bake(updateFunction)
   }, 2000)
-  updateFunction(status)
+  updateFunction.status
 }
 
 function cool(updateFunction) {
@@ -62,6 +66,11 @@ function cool(updateFunction) {
 function makeDessert() {
   //add code here to decide which make... function to call
   //based on which link was clicked
+  if (this.text === "Make Cake") {
+    makeCake();
+  } else {
+    makePie();
+  }
 }
 
 function serve(message, customer) {
