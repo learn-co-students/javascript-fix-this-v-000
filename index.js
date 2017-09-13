@@ -8,8 +8,8 @@ var cake = {
   decorate: function(updateFunction) {
     var status = "Decorating with " + this.topping + ". Ready to eat soon!"
     updateFunction(status)
-    setTimeout(function() {
-      updateFunction(serve.apply(this, "Happy Eating!", this.customer))
+    setTimeout((updateFunction) => {
+      updateFunction(serve.apply(this, ["Happy Eating!", this.customer]))
     }, 2000)
   }
 }
@@ -20,18 +20,23 @@ var pie = {
   topping: "streusel",
   bakeTemp: "350 degrees",
   bakeTime: "75 minutes",
-  customer: "Tammy"
+  customer: "Tammy",
+  decorate: cake.decorate.bind(pie)
+
 }
 
 function makeCake() {
   var updateCakeStatus = updateStatus.bind(this);
   updateCakeStatus("Starting my cake")
   mix.call(cake, updateCakeStatus)
+  bake.call(cake, updateCakeStatus)
+  cool.call(cake, updateCakeStatus)
 }
 
 function makePie() {
   var updatePieStatus = updateStatus.bind(this);
   updatePieStatus("Starting my pie")
+  pie.decorate = cake.decorate.bind(pie)
   mix.call(pie, updatePieStatus)
 }
 
@@ -41,43 +46,44 @@ function updateStatus(statusText) {
 
 function bake(updateFunction) {
   var status = "Baking at " + this.bakeTemp + " for " + this.bakeTime
-  setTimeout(function() {
-    cool(updateFunction)
-  }, 2000)
+  
+  setTimeout(() => {cool.call(this, updateFunction)
+  }, 2000);
+  updateFunction(status);
 }
 
-function mix(updateFunction) {
-  var status = "Mixing " + this.ingredients.join(", ")
-  setTimeout(function() {
-    bake.call(this, updateFunction)
-  }, 2000)
-  updateFunction(status)
-  bake.call(this, updateFunction)
-}
-
-function cool(updateFunction) {
-  var status = "It has to cool! Hands off!"
-  setTimeout(function() {
-    this.decorate.call(this, updateFunction)
-  }, 2000)
-}
-
-function makeDessert() {
-  if (this.innerText === "Make Cake") {
-    var cakeNode = document.querySelector('#cake')
-    makeCake.call(cakeNode)
-  } else {
-    var pieNode = document.querySelector('#pie')
-    makePie.call(pieNode)
-  }
-  //add code here to decide which make... function to call
-  //based on which link was clicked
-}
-
-function serve(message, customer) {
-  //you shouldn't need to alter this function
-  return(customer + ", your " + this.name + " is ready to eat! " + message)
-}
+// function mix(updateFunction) {
+//   var status = "Mixing " + this.ingredients.join(", ")
+//   updateFunction(status)
+//   setTimeout((updateFunction) => {
+//     bake.call(this, updateFunction)
+//   }, 2000)
+// }
+//
+// function cool(updateFunction) {
+//   var status = "It has to cool! Hands off!"
+//   updateFunction(status)
+//   setTimeout.bind(this, (updateFunction) => {
+//     this.decorate.call(this, updateFunction)
+//   }, 2000)
+// }
+//
+// function makeDessert() {
+//   if (this.text === "Make Cake") {
+//     var cakeNode = document.querySelector('#cake')
+//     makeCake.call(cakeNode)
+//   } else {
+//     var pieNode = document.querySelector('#pie')
+//     makePie.call(pieNode)
+//   }
+//   //add code here to decide which make... function to call
+//   //based on which link was clicked
+// }
+//
+// function serve(message, customer) {
+//   //you shouldn't need to alter this function
+//   return(customer + ", your " + this.name + " is ready to eat! " + message)
+// }
 
 document.addEventListener("DOMContentLoaded", function(event) {
   //you shouldn't need to alter this function
