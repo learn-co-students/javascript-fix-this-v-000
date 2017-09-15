@@ -11,6 +11,7 @@ describe('index', function() {
       var cakeNode = document.getElementById("cake")
       var makeCakeSpy = expect.spyOn(makeCake, "call")
       var makePieSpy = expect.spyOn(makePie, "call")
+      debugger
       makeDessert.call(pieNode.getElementsByClassName("js-make")[0])
       makeDessert.call(cakeNode.getElementsByClassName("js-make")[0])
       expect(makePieSpy).toHaveBeenCalledWith(pieNode)

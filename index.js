@@ -5,11 +5,10 @@ var cake = {
   bakeTemp: "425 degrees",
   bakeTime: "45 minutes",
   customer: "Tommy",
-  decorate: (updateFunction)=> {
-    debugger
+  decorate: function (updateFunction) {
     var status = "Decorating with " + this.topping + ". Ready to eat soon!"
     updateFunction(status)
-    setTimeout(() => {(serve.call(this, "Happy Eating!", this.customer))}, 2000)
+    setTimeout(() => {updateFunction(serve.apply(this, ["Happy Eating!", this.customer]))}, 2000)
   }
 }
 
@@ -23,44 +22,50 @@ var pie = {
 }
 
 function makeDessert() {
+  debugger
   if (this.innerHTML === "Make Pie"){
-    makePie()
+    makePie.call(document.getElementById("pie"))
   }
   else if (this.innerHTML === "Make Cake"){
-    makeCake()
+    makeCake.call(document.getElementById("cake"))
   }
 }
 
 function makeCake() {
+  // var updateCakeStatus = updateStatus.bind(this)
   var updateCakeStatus = updateStatus.bind(this)
-    // var updateCakeStatus = updateStatus.bind(document.getElementById("cake"))
   mix.call(cake,updateCakeStatus)
 }
 
 function makePie() {
+  // var updatePieStatus = updateStatus.bind(this)
   var updatePieStatus = updateStatus.bind(this)
-  // var updatePieStatus = updateStatus.bind(document.getElementById("pie"))
   pie.decorate = cake.decorate.bind(pie)
   mix.call(pie,updatePieStatus)
 }
 
 function mix(updateFunction) {
   var status = "Mixing " + this.ingredients.join(", ")
-  setTimeout(() => { bake.call(this,updateFunction)}, 2000)
   updateFunction(status)
+
+  setTimeout(() => { bake.call(this,updateFunction)}, 2000)
+  
 }
 
 function bake(updateFunction) {
   var status = "Baking at " + this.bakeTemp + " for " + this.bakeTime
-  setTimeout(() => { cool.call(this,updateFunction)}, 2000)
   updateFunction(status)
+
+  setTimeout(() => { cool.call(this,updateFunction)}, 2000)
+  
 }
 
 function cool(updateFunction) {
   var status = "It has to cool! Hands off!"
-  setTimeout(() => {
-    this.decorate(updateFunction)}, 2000);
   updateFunction(status)
+  
+  setTimeout(() => {this.decorate(updateFunction)}, 2000);
+  
 }
 
 function serve(message, customer) {
@@ -69,6 +74,7 @@ function serve(message, customer) {
 }
 
 function updateStatus(statusText) {
+
   this.getElementsByClassName("status")[0].innerText = statusText
 }
 
