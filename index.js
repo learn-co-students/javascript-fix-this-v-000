@@ -8,8 +8,8 @@ var cake = {
   decorate: function(updateFunction) {
     var status = "Decorating with " + this.topping + ". Ready to eat soon!"
     updateFunction(status)
-    setTimeout(function() {
-      updateFunction(serve.apply(this, "Happy Eating!", this.customer))
+    setTimeout(() => {
+      updateFunction(serve.apply(this, ["Happy Eating!", this.customer]))
     }, 2000)
   }
 }
@@ -24,13 +24,16 @@ var pie = {
 }
 
 function makeCake() {
-  var updateCakeStatus;
-  mix(updateCakeStatus)
+  var doc = document.getElementById('cake');
+  var updateCakeStatus = updateStatus.bind(doc);
+  mix.call(cake, updateCakeStatus);
 }
 
 function makePie() {
-  var updatePieStatus;
-  mix(updatePieStatus)
+  var doc = document.getElementById('pie');
+  var updatePieStatus = updateStatus.bind(doc);
+  pie.decorate = cake.decorate.bind(pie)
+  mix.call(pie, updatePieStatus);
 }
 
 function updateStatus(statusText) {
@@ -38,28 +41,38 @@ function updateStatus(statusText) {
 }
 
 function bake(updateFunction) {
+  var pastry = this;
   var status = "Baking at " + this.bakeTemp + " for " + this.bakeTime
   setTimeout(function() {
-    cool(updateFunction)
+    cool.call(pastry, updateFunction)
   }, 2000)
+  updateFunction(status);
 }
 
 function mix(updateFunction) {
-  var status = "Mixing " + this.ingredients.join(", ")
+  var status = "Mixing " + this.ingredients.join(", ");
+  var pastry = this;
   setTimeout(function() {
-    bake(updateFunction)
+    bake.call(pastry, updateFunction);
   }, 2000)
-  updateFunction(status)
+  updateFunction(status);
 }
+
 
 function cool(updateFunction) {
   var status = "It has to cool! Hands off!"
-  setTimeout(function() {
+  setTimeout(() => {
     this.decorate(updateFunction)
   }, 2000)
-}
+  updateFunction(status);
+  }
 
 function makeDessert() {
+  if (this.parentNode.id === "cake"){
+    makeCake.call(this.parentNode);
+  } else {
+    makePie.call(this.parentNode);
+  }
   //add code here to decide which make... function to call
   //based on which link was clicked
 }
