@@ -8,8 +8,8 @@ var cake = {
   decorate: function(updateFunction) {
     var status = "Decorating with " + this.topping + ". Ready to eat soon!"
     updateFunction(status)
-    setTimeout(function() {
-      updateFunction(serve.apply(this, "Happy Eating!", this.customer))
+    setTimeout(() => {
+      updateFunction(serve.apply(this, ["Happy Eating!", this.customer]))
     }, 2000)
   }
 }
@@ -32,6 +32,7 @@ function makeCake() {
 function makePie() {
   var doc = document.getElementById('pie');
   var updatePieStatus = updateStatus.bind(doc);
+  pie.decorate = cake.decorate.bind(pie)
   mix.call(pie, updatePieStatus);
 }
 
@@ -50,21 +51,21 @@ function bake(updateFunction) {
 
 function mix(updateFunction) {
   var status = "Mixing " + this.ingredients.join(", ");
-
+  var pastry = this;
   setTimeout(function() {
     bake.call(pastry, updateFunction);
   }, 2000)
   updateFunction(status);
 }
 
+
 function cool(updateFunction) {
   var status = "It has to cool! Hands off!"
-  this.decorate(updateFunction)
-  // setTimeout(function() {
-  //   this.decorate(updateFunction)
-  // }, 2000)
+  setTimeout(() => {
+    this.decorate(updateFunction)
+  }, 2000)
   updateFunction(status);
-}
+  }
 
 function makeDessert() {
   if (this.innerHTML === "Make Cake"){
