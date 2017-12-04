@@ -17,10 +17,6 @@ var cake = {
 }
 
 var pie = {
-  decorate: function (updateFunction) {
-    let funTimes = cake.decorate.bind(pie)
-    funTimes(updateFunction)
-  },
   name: "Apple Pie",
   ingredients: ["apples", "flour", "eggs", "butter", "sugar"],
   topping: "streusel",
@@ -38,6 +34,7 @@ function makeCake() {
 function makePie() {
   let pieNode = this
   var updatePieStatus = updateStatus.bind(pieNode)
+  pie.decorate = cake.decorate.bind(pie)
   mix.call(pie, updatePieStatus)
 }
 
