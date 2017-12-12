@@ -7,9 +7,10 @@ var cake = {
   customer: "Tommy",
   decorate: function(updateFunction) {
     var status = "Decorating with " + this.topping + ". Ready to eat soon!"
-    updateFunction(status)
+    updateFunction(status);
+    var dessert = this;
     setTimeout(function() {
-      updateFunction(serve.apply(this, "Happy Eating!", this.customer))
+      updateFunction(serve.apply(dessert, ["Happy Eating!", dessert.customer]))
     }, 2000)
   }
 }
@@ -24,13 +25,21 @@ var pie = {
 }
 
 function makeCake() {
-  var updateCakeStatus;
-  mix(updateCakeStatus)
+  var updateCakeStatus = this;
+
+  var updateFunction = updateStatus.bind(updateCakeStatus);
+
+  mix.call(cake, updateFunction)
 }
 
 function makePie() {
-  var updatePieStatus;
-  mix(updatePieStatus)
+  var updatePieStatus = this;
+
+  pie.decorate = cake.decorate.bind(pie);
+
+  var updateFunction = updateStatus.bind(updatePieStatus);
+
+  mix.call(pie, updateFunction)
 }
 
 function updateStatus(statusText) {
@@ -39,29 +48,42 @@ function updateStatus(statusText) {
 
 function bake(updateFunction) {
   var status = "Baking at " + this.bakeTemp + " for " + this.bakeTime
+  var dessert = this
   setTimeout(function() {
-    cool(updateFunction)
+    cool.call(dessert, updateFunction)
   }, 2000)
+  updateFunction(status);
 }
 
 function mix(updateFunction) {
   var status = "Mixing " + this.ingredients.join(", ")
+  var dessert = this
   setTimeout(function() {
-    bake(updateFunction)
+    bake.call(dessert, updateFunction)
   }, 2000)
   updateFunction(status)
 }
 
 function cool(updateFunction) {
   var status = "It has to cool! Hands off!"
+  var dessert = this
   setTimeout(function() {
-    this.decorate(updateFunction)
+    dessert.decorate(updateFunction)
   }, 2000)
+  updateFunction(status);
 }
 
 function makeDessert() {
   //add code here to decide which make... function to call
-  //based on which link was clicked
+  //based on which link was s
+  var typeString = this.text.toString();
+  if (typeString.includes("Cake")) {
+    var cakeNode = document.getElementById("cake");
+    makeCake.call(cakeNode);
+  } else if (typeString.includes("Pie")) {
+    var pieNode = document.getElementById("pie");
+    makePie.call(pieNode);
+  }
 }
 
 function serve(message, customer) {
