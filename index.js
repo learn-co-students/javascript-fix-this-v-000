@@ -7,7 +7,7 @@ var cake = {
   customer: "Tommy",
   decorate: function(updateFunction) {
     var status = "Decorating with " + this.topping + ". Ready to eat soon!"
-    updateFunction(status);
+    updateFunction(status)
     setTimeout(() => {
       updateFunction(serve.apply(this, ["Happy Eating!", this.customer]))
     }, 2000)
@@ -25,15 +25,13 @@ var pie = {
 
 function makeCake() {
   var updateCakeStatus = updateStatus.bind(this);
-  mix.call(cake, updateCakeStatus);
-
+  mix.call(cake, updateCakeStatus)
 }
 
 function makePie() {
+  var updatePieStatus = updateStatus.bind(this)
   pie.decorate = cake.decorate.bind(pie);
-  var updatePieStatus = updateStatus.bind(this);
-
-  mix.call(pie, updatePieStatus);
+  mix.call(pie, updatePieStatus)
 }
 
 function updateStatus(statusText) {
@@ -42,34 +40,34 @@ function updateStatus(statusText) {
 
 function bake(updateFunction) {
   var status = "Baking at " + this.bakeTemp + " for " + this.bakeTime;
-  setTimeout(() => {
-    cool.call(this, updateFunction)
-  }, 2000);
   updateFunction(status)
+  setTimeout(() => {
+
+    cool.call(this, updateFunction)
+  }, 2000)
 }
 
 function mix(updateFunction) {
   var status = "Mixing " + this.ingredients.join(", ")
+  updateFunction(status)
   setTimeout(() => {
     bake.call(this, updateFunction)
-  }, 2000);
+  }, 2000)
   updateFunction(status)
 }
 
 function cool(updateFunction) {
   var status = "It has to cool! Hands off!"
+  updateFunction(status)
   setTimeout(() => {
     this.decorate(updateFunction)
-  }, 2000);
-  updateFunction(status)
+  }, 2000)
 }
 
 function makeDessert() {
-  if(this.innerHTML === "Make Cake") {
-    makeCake.call(this.parentElement);
-  } else if(this.innerHTML === "Make Pie") {
-    makePie.call(this.parentElement);
-  }
+  this.innerHTML.toLowerCase().includes('pie') ?
+    makePie.call(this.parentElement) :
+    makeCake.call(this.parentElement)
 }
 
 function serve(message, customer) {
