@@ -8,9 +8,10 @@ var cake = {
   decorate: function(updateFunction) {
     var status = "Decorating with " + this.topping + ". Ready to eat soon!"
     updateFunction(status)
-    window.setTimeout(function() {
-      updateFunction(serve.apply(this, "Happy Eating!", this.customer))
-    }, 2000)
+    var nextStep = () => {
+      updateFunction(serve.apply(this, ["Happy Eating!", this.customer]))
+    }
+    window.setTimeout(nextStep.bind(this), 2000)
   }
 }
 
@@ -30,6 +31,7 @@ function makeCake() {
 
 function makePie() {
   var updatePieStatus = updateStatus.bind(this);
+  pie.decorate = cake.decorate.bind(pie)
   mix.call(pie,updatePieStatus);
 }
 
@@ -39,24 +41,29 @@ function updateStatus(statusText) {
 
 function bake(updateFunction) {
   var status = "Baking at " + this.bakeTemp + " for " + this.bakeTime
-  setTimeout(function() {
-    cool(updateFunction)
-  }, 2000)
+  updateFunction(status)
+  var nextStep = () => {
+    cool.call(this,updateFunction)
+  }
+  setTimeout(nextStep.bind(this), 2000)
 }
 
 function mix(updateFunction) {
   var status = "Mixing " + this.ingredients.join(", ")
-  window.setTimeout(function() {
-    bake(updateFunction)
-  }, 2000)
   updateFunction(status)
+  var nextStep = () => {
+    bake.call(this,updateFunction)
+  }
+  setTimeout(nextStep.bind(this), 2000)
 }
 
 function cool(updateFunction) {
   var status = "It has to cool! Hands off!"
-  setTimeout(function() {
+  updateFunction(status)
+  var nextStep = () => {
     this.decorate(updateFunction)
-  }, 2000)
+  }
+  setTimeout(nextStep.bind(this), 2000)
 }
 
 function makeDessert() {
