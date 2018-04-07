@@ -63,9 +63,9 @@ function makeDessert() {
   //add code here to decide which make... function to call
   //based on which link was clicked
   if (this.parentElement.id === "pie") {
-    makePie.call(this);
+    makePie.call(this.parentElement);
   } else {
-    makeCake.call(this);
+    makeCake.call(this.parentElement);
   }
 }
 
