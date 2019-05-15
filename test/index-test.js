@@ -116,8 +116,8 @@ describe('index', function() {
         bake.call(pie, update)
         expect(
           document.getElementById("pie").getElementsByClassName("status")[0].innerText
-        ).toMatch(/Baking at/)
-      })
+        ).toMatch(/Baking at/);
+      });
 
       it('calls cool with context', function() {
         var coolSpy = expect.spyOn(cool, "call")
