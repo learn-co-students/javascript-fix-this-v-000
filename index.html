@@ -8,15 +8,15 @@
   </head>
   <body>
     <main id="main">
-      <div id="cake">
+      <div id="cake" onclick="makeDessert(this)">
         <h3>Cake</h3>
         <p>Status: <span class="status">Not Started</span></p>
-        <a class="js-make" href="#">Make Cake</a>
+        <a class="js-make" id="cakeLink" href="#">Make Cake</a>
       </div>
-      <div id="pie">
+      <div onclick="makeDessert(this)" id="pie">
         <h3>Pie</h3>
         <p>Status: <span class="status">Not Started</span></p>
-        <a href="#" class="js-make">Make Pie</a>
+        <a href="#" id="pieLink" class="js-make">Make Pie</a>
       </div>
     </main>
     <script src="index.js"></script>

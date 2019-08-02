@@ -8,8 +8,10 @@ var cake = {
   decorate: function(updateFunction) {
     var status = "Decorating with " + this.topping + ". Ready to eat soon!"
     updateFunction(status)
-    setTimeout(function() {
-      updateFunction(serve.apply(this, "Happy Eating!", this.customer))
+    setTimeout(() => {
+      let thisDessert = this
+      let thisCustomer = this.customer
+      updateFunction(serve.apply(thisDessert, ["Happy Eating!", thisCustomer]))
     }, 2000)
   }
 }
@@ -24,13 +26,16 @@ var pie = {
 }
 
 function makeCake() {
-  var updateCakeStatus;
-  mix(updateCakeStatus)
+  let cakeNode = this
+  var updateCakeStatus = updateStatus.bind(cakeNode)
+  mix.call(cake, updateCakeStatus)
 }
 
 function makePie() {
-  var updatePieStatus;
-  mix(updatePieStatus)
+  let pieNode = this
+  var updatePieStatus = updateStatus.bind(pieNode)
+  pie.decorate = cake.decorate.bind(pie)
+  mix.call(pie, updatePieStatus)
 }
 
 function updateStatus(statusText) {
@@ -39,29 +44,52 @@ function updateStatus(statusText) {
 
 function bake(updateFunction) {
   var status = "Baking at " + this.bakeTemp + " for " + this.bakeTime
-  setTimeout(function() {
-    cool(updateFunction)
-  }, 2000)
+  let thisCool = cool.bind(this)
+  // setTimeout(function() {
+  //   thisCool(updateFunction)
+  // }, 2000)
+  setTimeout(() => {
+    cool.call(this, updateFunction)
+  },2000);
+
+  updateFunction(status)
 }
 
 function mix(updateFunction) {
   var status = "Mixing " + this.ingredients.join(", ")
-  setTimeout(function() {
-    bake(updateFunction)
-  }, 2000)
+  let thisBake = bake.bind(this)
+  setTimeout(() => {
+    bake.call(this, updateFunction)
+  }, 2000);
+
   updateFunction(status)
 }
 
 function cool(updateFunction) {
   var status = "It has to cool! Hands off!"
-  setTimeout(function() {
-    this.decorate(updateFunction)
-  }, 2000)
+  setTimeout(() => {
+    this.decorate.call(this, updateFunction)
+  }, 2000);
+
+  updateFunction(status)
 }
 
 function makeDessert() {
   //add code here to decide which make... function to call
   //based on which link was clicked
+
+  if(this.id === "cakeLink"){
+    let cakeDiv = document.getElementById("cake")
+    makeCake.call(cakeDiv)
+  }
+  else if(this.id === "pieLink"){
+    let pieDiv = document.getElementById("pie")
+    makePie.call(pieDiv)
+  }
+  // let cake = document.getElementById("cake")
+  // let pie = document.getElementById("pie")
+  // cake.addEventListener("click", makeCake)
+  // pie.addEventListener("click", makePie)
 }
 
 function serve(message, customer) {
